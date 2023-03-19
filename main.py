@@ -5,12 +5,6 @@ from ui import Ui_MainWindow
 import requests
 import json
 import math
-import firebase_admin
-
-# cred_obj = firebase_admin.credentials.Certificate('....path to file')
-# default_app = firebase_admin.initialize_app(cred_obj, {
-# 	'databaseURL': databaseURL
-# 	})
 
 
 class MainWindow(QMainWindow):
@@ -23,11 +17,14 @@ class MainWindow(QMainWindow):
         self.v_max = 2
 
         self.T = 25
-        self.oxi = 38
+        self.oxi = 30
 
         self.k = math.sin((-math.pi / 2) + ((math.pi * (self.T + 0.5) * self.oxi) / 40))
 
-        self.r = requests.get('https://dt.miet.ru/ppo_it_final', headers={"X-Auth-Token": "629q2skt"})
+        self.r = requests.get('https://dt.miet.ru/ppo_it_final/judge2', headers={"X-Auth-Token": "629q2skt"})
+
+        # json.dump(self.r.json(), open('data.json', 'w', encoding='utf8'))
+
 
         self.index_task = 0
         self.index_pint = 0
@@ -92,7 +89,8 @@ class MainWindow(QMainWindow):
             'останется SH': self.sum_sh - sum_to_point,
             'масса'       : sum_to_point + 192,
             'скорость'    : self.u,
-            'generation'  : self.get_last_g(value)
+            'generation'  : self.get_last_g(value),
+            'oxi': self.oxi
         }
         self.ui.plainTextEdit_data_info.setPlainText(json.dumps(self.data_infp, ensure_ascii=False, indent=4))
 
