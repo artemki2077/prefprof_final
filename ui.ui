@@ -88,27 +88,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QPushButton" name="btn_back">
-              <property name="text">
-               <string>    &lt;    </string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="lineEdit_day"/>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btn_for">
-              <property name="text">
-               <string>    &gt;    </string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </item>
         <item>
@@ -127,11 +106,7 @@
        <attribute name="title">
         <string>Классефикация</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout"/>
-        </item>
-       </layout>
+       <layout class="QHBoxLayout" name="horizontalLayout"/>
       </widget>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">

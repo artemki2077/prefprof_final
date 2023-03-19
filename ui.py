@@ -16,9 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QComboBox, QHBoxLayout,
-    QLineEdit, QMainWindow, QPlainTextEdit, QPushButton,
-    QSizePolicy, QStatusBar, QTabWidget, QVBoxLayout,
-    QWidget)
+    QMainWindow, QPlainTextEdit, QSizePolicy, QStatusBar,
+    QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -66,26 +65,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.plainTextEdit_task_info)
 
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.btn_back = QPushButton(self.train_tab)
-        self.btn_back.setObjectName(u"btn_back")
-
-        self.horizontalLayout_3.addWidget(self.btn_back)
-
-        self.lineEdit_day = QLineEdit(self.train_tab)
-        self.lineEdit_day.setObjectName(u"lineEdit_day")
-
-        self.horizontalLayout_3.addWidget(self.lineEdit_day)
-
-        self.btn_for = QPushButton(self.train_tab)
-        self.btn_for.setObjectName(u"btn_for")
-
-        self.horizontalLayout_3.addWidget(self.btn_for)
-
-
-        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
-
 
         self.horizontalLayout_2.addLayout(self.verticalLayout_2)
 
@@ -100,11 +79,6 @@ class Ui_MainWindow(object):
         self.classer_tab.setObjectName(u"classer_tab")
         self.horizontalLayout = QHBoxLayout(self.classer_tab)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-
-        self.horizontalLayout.addLayout(self.verticalLayout)
-
         self.tabWidget.addTab(self.classer_tab, "")
         self.data_tab = QWidget()
         self.data_tab.setObjectName(u"data_tab")
@@ -134,8 +108,6 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(accessibility)
         self.plainTextEdit_task_info.setPlainText("")
         self.plainTextEdit_task_info.setPlaceholderText("")
-        self.btn_back.setText(QCoreApplication.translate("MainWindow", u"    <    ", None))
-        self.btn_for.setText(QCoreApplication.translate("MainWindow", u"    >    ", None))
         self.plainTextEdit_data_info.setPlainText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.train_tab), QCoreApplication.translate("MainWindow", u"\u041f\u0443\u0442\u044c", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.classer_tab), QCoreApplication.translate("MainWindow", u"\u041a\u043b\u0430\u0441\u0441\u0435\u0444\u0438\u043a\u0430\u0446\u0438\u044f", None))

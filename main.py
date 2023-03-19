@@ -4,6 +4,13 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from ui import Ui_MainWindow
 import requests
 import json
+import math
+import firebase_admin
+
+# cred_obj = firebase_admin.credentials.Certificate('....path to file')
+# default_app = firebase_admin.initialize_app(cred_obj, {
+# 	'databaseURL': databaseURL
+# 	})
 
 
 class MainWindow(QMainWindow):
@@ -14,6 +21,11 @@ class MainWindow(QMainWindow):
 
         self.ind_day = 0
         self.v_max = 2
+
+        self.T = 25
+        self.oxi = 38
+
+        self.k = math.sin((-math.pi / 2) + ((math.pi * (self.T + 0.5) * self.oxi) / 40))
 
         self.r = requests.get('https://dt.miet.ru/ppo_it_final', headers={"X-Auth-Token": "629q2skt"})
 
@@ -29,33 +41,11 @@ class MainWindow(QMainWindow):
         self.ui.comboBox_task.currentIndexChanged.connect(self.up_task)
         self.ui.comboBox_points.currentIndexChanged.connect(self.up_point)
 
-
-
-        self.ui.btn_for.clicked.connect(self.day_up)
-        self.ui.btn_back.clicked.connect(self.day_down)
-
-
-
-        self.ui.lineEdit_day.setText(str(self.ind_day))
-
-    def day_up(self):
-        self.ind_day += 1
-
-        self.ui.lineEdit_day.setText(str(self.ind_day))
-
-    def day_down(self):
-        self.ind_day -= 1
-
-        if self.ind_day == -1:
-            self.ind_day = 0
-
-        self.ui.lineEdit_day.setText(str(self.ind_day))
-
     def up_task(self, value):
+
         self.index_task = int(value)
         self.points = self.r.json()['message'][self.index_task]['points']
 
-        print(self.points)
         self.ui.comboBox_points.clear()
         for i in range(len(self.points)):
             self.ui.comboBox_points.addItem(str(i + 1))
@@ -64,35 +54,58 @@ class MainWindow(QMainWindow):
         self.sum_distance = sum([i['distance'] for i in self.points])
 
         self.task_info = {
-            'взять SH'     : self.sum_sh + 8,
-            'вся дистанция': self.sum_distance,
+            'взять SH'       : self.sum_sh + 8,
+            'вся дистанция'  : self.sum_distance,
             'количество дней': self.sum_distance / self.v_max
         }
 
         self.ui.plainTextEdit_task_info.setPlainText(json.dumps(self.task_info, ensure_ascii=False, indent=4))
-    
+
+    def get_last_g(self, value):
+        if value < 1:
+            return 1
+        else:
+            prm = self.get_last_g(value - 1)
+            return prm + (prm * self.k)
+
     def up_point(self, value):
         self.index_pint = value
 
+        self.sum_sh = sum([i['SH'] for i in self.points]) + 8
+        self.sum_distance = sum([i['distance'] for i in self.points])
 
         sum_to_point = 0
-        for i in range(value):
-            sum_to_point += self.points[i]
-        print(f'{value}: {sum_to_point}')
+        sum_d_to_point = 0
+
+        for i in self.points[:value + 1]:
+            sum_to_point += i['SH']
+            sum_d_to_point += i['distance']
+
+        self.day = (sum_d_to_point / self.sum_distance) * (self.sum_distance / self.v_max)
+
+        self.u = 2 * (0.8 / 80) * (200 / (sum_to_point + 192))
+
         self.data_infp = {
-            'ТОЧКА ': value + 1,
+            'ТОЧКА '      : value + 1,
+            'день'        : self.day,
             'выгрузить SH': self.points[value]['SH'],
-            'останется SH': self.sum_sh -
+            'останется SH': self.sum_sh - sum_to_point,
+            'масса'       : sum_to_point + 192,
+            'скорость'    : self.u,
+            'generation'  : self.get_last_g(value)
         }
         self.ui.plainTextEdit_data_info.setPlainText(json.dumps(self.data_infp, ensure_ascii=False, indent=4))
-        
 
 
-if __name__ == "__main__":
-    # print(get_data())
+def main():
     app = QApplication(sys.argv)
 
     window = MainWindow()
     window.show()
 
     sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    # print(get_data())
+    main()
